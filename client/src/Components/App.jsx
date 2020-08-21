@@ -16,6 +16,7 @@ function scrollToBottom(){
   chat.scrollTop = chat.scrollHeight;
 }
 
+  const [control,setControl] = useState(0);
   const [bodyMsg, setBodyMsg] = useState({
     chat:[],
     content:'',
@@ -33,6 +34,7 @@ function scrollToBottom(){
           content:prevValue.content,
           name:prevValue.name
       }});
+      setControl(1);
       scrollToBottom();
     });
 
@@ -43,10 +45,11 @@ function scrollToBottom(){
           chat:[...prevValue.chat,msg],
         }
       });
+      setControl(1);
       scrollToBottom();
     });
 
-  });
+  },[control]);
 
  function handleInput(event){
     const {name,value} = event.target;
@@ -71,7 +74,7 @@ function scrollToBottom(){
        name:prevValue.name
      }
    });
-
+   setControl(0);
    scrollToBottom();
  }
   
