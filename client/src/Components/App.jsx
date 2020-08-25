@@ -24,20 +24,18 @@ function scrollToBottom(){
   });
 
   const socket = io(config[process.env.NODE_ENV].endpoint);
+  socket.on('init',(msg)=>{
+    let msgReversed = msg.reverse();
+    setBodyMsg(prevValue=>{
+      return {
+        chat:[...prevValue.chat,...msgReversed],
+        content:prevValue.content,
+        name:prevValue.name
+    }});
+    scrollToBottom();
+  });
   
   useEffect(()=>{
-    socket.on('init',(msg)=>{
-      let msgReversed = msg.reverse();
-      setBodyMsg(prevValue=>{
-        return {
-          chat:[...prevValue.chat,...msgReversed],
-          content:prevValue.content,
-          name:prevValue.name
-      }});
-      setControl(1);
-      scrollToBottom();
-    });
-
     socket.on('push', (msg)=>{
       setBodyMsg(prevValue=>{
         return {
@@ -45,7 +43,9 @@ function scrollToBottom(){
           chat:[...prevValue.chat,msg],
         }
       });
-      setControl(1);
+      if(control){setControl(1);}
+      else{setControl(0);}
+      
       scrollToBottom();
     });
 
@@ -74,7 +74,6 @@ function scrollToBottom(){
        name:prevValue.name
      }
    });
-   setControl(0);
    scrollToBottom();
  }
   

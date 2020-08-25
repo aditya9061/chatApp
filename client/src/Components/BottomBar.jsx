@@ -69,6 +69,7 @@ function BottomBar(props){
               <ChatIcon />
             </div>
             <InputBase
+              fullWidth={true}
               onChange={props.handleContent}
               value={props.content}
               name='content'
