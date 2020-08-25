@@ -16,26 +16,28 @@ function scrollToBottom(){
   chat.scrollTop = chat.scrollHeight;
 }
 
-  const [control,setControl] = useState(0);
+  const [control,setControl] = useState([]);
   const [bodyMsg, setBodyMsg] = useState({
     chat:[],
     content:'',
     name:''
   });
 
-  const socket = io(config[process.env.NODE_ENV].endpoint);
-  socket.on('init',(msg)=>{
-    let msgReversed = msg.reverse();
-    setBodyMsg(prevValue=>{
-      return {
-        chat:[...prevValue.chat,...msgReversed],
-        content:prevValue.content,
-        name:prevValue.name
-    }});
-    scrollToBottom();
-  });
+
   
   useEffect(()=>{
+    const socket = io(config[process.env.NODE_ENV].endpoint);
+    socket.on('init',(msg)=>{
+      let msgReversed = msg.reverse();
+      setBodyMsg(prevValue=>{
+        return {
+          chat:[...prevValue.chat,...msgReversed],
+          content:prevValue.content,
+          name:prevValue.name
+      }});
+      scrollToBottom();
+    });
+
     socket.on('push', (msg)=>{
       setBodyMsg(prevValue=>{
         return {
@@ -43,8 +45,7 @@ function scrollToBottom(){
           chat:[...prevValue.chat,msg],
         }
       });
-      if(control){setControl(1);}
-      else{setControl(0);}
+      
       
       scrollToBottom();
     });
